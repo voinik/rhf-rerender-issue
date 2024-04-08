@@ -20,17 +20,18 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+## Reproduce the issue
 
-To learn more about Next.js, take a look at the following resources:
+1. Go to the correct localhost port in your browser
+2. Open the browser console
+3. Clear the console for clarity
+4. Click on the "Submit" button of the form in the browser
+5. Notice the number of entries in the Console went from 0 (because you cleared it) to 6
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+If I downgrade the react-hook-form version from 7.51.1 to 7.51.0, then you will only see 2 entries in the Console. This means there is some kind of regression. I spent quite a bit digging but I'm not sure what's causing it yet. I noticed the release notes of 7.51.1 mentioned validatingFields. That seems to be related.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+I commented out some other components that I was testing with, but they don't seem to be affected (there seems to be no difference between the old and newer versions of react-hook-form, with relation to rerenders).
 
-## Deploy on Vercel
+Also, if you fill in the complete form correctly, and then submit, you will see 4 entries **before** the `onSubmit` `console.log(data)` call, and 4 entries **after** it, whereas with 7.51.0 you'll **only** see the `onSubmit` `console.log(data)`, and then 4 entries **after** it.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+If you want to downgrade, obviously don't forget to run `pnpm i` (or whatever package manager you use) again.
